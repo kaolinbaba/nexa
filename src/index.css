@@ -1,0 +1,241 @@
+@import 'tailwindcss';
+
+/*
+ * Nexa design tokens ("Night Shift Console"). Components use these tokens only — no raw hex.
+ * Source of truth: DESIGN.md.
+ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', var(--font-sans);
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* Canvas & surfaces */
+  --color-bg: #0a0f1e; /* midnight navy */
+  --color-bg-deep: #070b16;
+  --color-surface: #0f1526; /* graphite 1 */
+  --color-surface-2: #141b2d; /* graphite 2 — cards */
+  --color-surface-3: #1a2236; /* graphite 3 — hover / raised */
+  --color-line: #1f2840; /* hairline */
+  --color-line-strong: #2c3753;
+
+  /* Text */
+  --color-text: #e8ecf4; /* soft off-white */
+  --color-muted: #94a3b8; /* slate */
+  --color-faint: #8190a8; /* tertiary — ≥5:1 on bg */
+
+  /* Brand */
+  --color-brand: #3b82f6;
+  --color-brand-strong: #2563eb; /* filled buttons (white text 5.2:1) */
+  --color-brand-deep: #1d4ed8; /* primary hover */
+  --color-brand-text: #60a5fa;
+  --color-violet: #885cf6;
+  --color-violet-text: #a78bfa;
+  --color-violet-strong: #6d3fe0; /* filled violet buttons (white 6.1:1) */
+  --color-cyan: #22d3ee;
+
+  /* Status */
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+
+  --radius-card: 1rem;
+  --radius-panel: 1.25rem;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --animate-pulse-soft: pulse-soft 2.4s var(--ease-standard) infinite;
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(0.85);
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-bg text-text font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+  }
+  /* Fine grain over everything — stops gradient banding, adds texture. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-text);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand) 45%, transparent);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* Elevated graphite plane with a faint top highlight (hairlines over shadows). */
+  .panel {
+    background: linear-gradient(180deg, color-mix(in oklab, var(--color-surface-2) 100%, white 2%), var(--color-surface-2));
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+  }
+  .glass {
+    background: color-mix(in oklab, var(--color-surface) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid color-mix(in oklab, var(--color-line-strong) 70%, transparent);
+  }
+  .text-gradient {
+    background: linear-gradient(100deg, var(--color-text) 30%, var(--color-brand-text) 70%, var(--color-violet-text));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.16em] text-muted;
+  }
+  /* Hairline grid used behind hero/feature art. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--color-line) 60%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-line) 60%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Hero preview choreography — one-shot, transform/opacity only. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes wipe-out {
+  to {
+    transform: scaleX(0);
+  }
+}
+@keyframes step-on {
+  from {
+    opacity: 0.3;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+.hero-kpi {
+  animation: rise-in 0.7s var(--ease-out-expo) both;
+}
+.hero-wipe {
+  animation: wipe-out 1.6s var(--ease-out-expo) 0.7s both;
+}
+.hero-step {
+  animation: step-on 0.5s var(--ease-standard) both;
+}
+.hero-check {
+  animation: pop-in 0.45s var(--ease-out-expo) both;
+}
+/* Guided tour highlight (static ring + soft halo; no layout animation). */
+.tour-target {
+  outline: 2px solid var(--color-violet-text);
+  outline-offset: 6px;
+  border-radius: 14px;
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--color-violet) 14%, transparent);
+}
+@keyframes travel {
+  from {
+    transform: translateX(-10%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.rail-pulse {
+  animation: travel 4.5s var(--ease-standard) infinite;
+}
+/* Hero ribbon motif: hidden behind the copy block, fades into the product preview. */
+.hero-flow-stage {
+  -webkit-mask-image: radial-gradient(ellipse 560px 340px at 720px 275px, transparent 72%, black 100%);
+  mask-image: radial-gradient(ellipse 560px 340px at 720px 275px, transparent 72%, black 100%);
+}
+@keyframes ride {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+.hero-pulse {
+  offset-rotate: 0deg;
+  animation: ride 9s linear infinite;
+}
+/* Gentle bob for layered product cards (transform only; frozen under reduced motion). */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.float-card {
+  animation: bob 7s var(--ease-standard) infinite;
+}
+.fade-up {
+  animation: rise-in 0.9s var(--ease-out-expo) both;
+}
+
+/* Respect reduced-motion globally; per-component motion must also check it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
