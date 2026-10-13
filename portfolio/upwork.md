@@ -1,5 +1,10 @@
 # Upwork portfolio entry: Nexa
 
+- **Live website:** https://kaolinbaba.github.io/nexa/
+- **Published on Upwork (2026-10-13):** https://www.upwork.com/freelancers/~0171d2d437f7c21d6a?p=2109800551317463040
+- As published: the title was shortened to fit Upwork's 70-character limit, and the description was condensed to under 600
+  characters with the live link included. The live-site link card is the second content block, after the cover.
+
 ## Project title
 Nexa: Premium AI SaaS Brand, Landing Page & Interactive Dashboard (Concept)
 

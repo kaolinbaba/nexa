@@ -7,4 +7,5 @@
 - **Portfolio:** `portfolio/`: cover, 16 screenshots, case study, Upwork copy, tech list, setup.
 - **Credits/licenses:** `docs/assets.md`.
 - **Placeholders:** none (automated placeholder scan passes). All names and data are intentional fictional demo content.
-- **Not done (by instruction):** no git repo/commit, no deployment, no domain.
+- **Live:** https://kaolinbaba.github.io/nexa/ (GitHub Pages via Actions; repo github.com/kaolinbaba/nexa).
+- **Upwork:** https://www.upwork.com/freelancers/~0171d2d437f7c21d6a?p=2109800551317463040
