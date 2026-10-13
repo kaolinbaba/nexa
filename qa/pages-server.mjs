@@ -1,4 +1,4 @@
-// Mimics GitHub Pages for local testing: serves dist/ under /nexa/, dir → index.html,
+// Mimics GitHub Pages for local testing: serves dist/ under /nexa/, dir → index.html, /x → x.html,
 // missing → 404.html (status 404). No SPA rewrites. Usage: node qa/pages-server.mjs [port]
 import { createServer } from 'node:http'
 import { existsSync, readFileSync, statSync } from 'node:fs'
@@ -10,6 +10,7 @@ createServer((req, res) => {
   if (!url.pathname.startsWith('/nexa/') && url.pathname !== '/nexa') { res.writeHead(404); return res.end('not found') }
   let file = join('dist', decodeURIComponent(url.pathname.replace(/^\/nexa/, '')))
   if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html')
+  if (!existsSync(file) && existsSync(`${file}.html`)) file = `${file}.html` // Pages resolves extensionless URLs
   let status = 200
   if (!existsSync(file)) { file = 'dist/404.html'; status = 404 }
   res.writeHead(status, { 'content-type': types[extname(file)] ?? 'application/octet-stream' })
